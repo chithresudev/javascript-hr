@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Javascript</title>
+  </head>
+  <body>
+    <input type="text" name="name" placeholder="please enter name" />
+    <input type="text" name="phone" placeholder="please enter phone" />
+    <input type="date" name="date" id="date" />
+    <select name="select-time" id="selectTime">
+      <option selected value="">Select time slot</option>
+      <option value="9-10">9-10 AM</option>
+      <option value="11-12">11-12 AM</option>
+      <option value="1-2">1-2 PM</option>
+      <option value="3-4">3-4 PM</option>
+    </select>
+    <table border="1"></table>
+    <script>
+      const getDate = document.getElementById("date");
+      var date = "";
+      getDate.addEventListener("change", (dateEl) => {
+        date = "";
+        date += dateEl.target.value;
+      });
+
+      var array = [];
+      var count = 0;
+      const getTimeSlot = document.getElementById("selectTime");
+      getTimeSlot.addEventListener("change", (slotEl) => {
+        const slotTime = slotEl.target.value;
+        const dateTime = date.concat("_#", slotTime);
+        count++;
+        if (count <= 5) {
+          hrcount = count;
+          var nameString = "hr" + hrcount + "_" + dateTime;
+
+          if (array.includes(nameString)) {
+            checkExits(hrcount, dateTime);
+          } else {
+            array.push(nameString);
+          }
+
+          if (count == 5) count = 0;
+        }
+
+        function checkExits(hrcount, dateTime) {
+          hrcount = hrcount + 1;
+          if (hrcount == 6) {
+            hrcount = 0;
+          }
+          nameString = "hr" + hrcount + "_" + dateTime;
+
+          if (array.includes(nameString)) {
+            checkExits(hrcount, dateTime);
+            array.push(nameString);
+          } else {
+            array.push(nameString);
+          }
+        }
+
+        arrayCount = [];
+        array.map((value) => {
+          value = value.split("_#").pop();
+          arrayCount.push(value);
+        });
+
+        cusCounts = [];
+        arrayCount.forEach((element) => {
+          cusCounts[element] = (cusCounts[element] || 0) + 1;
+        });
+
+        for (let [ckey, cvalue] of Object.entries(cusCounts)) {
+          for (let i = 0; i < getTimeSlot.length; i++) {
+            if (getTimeSlot.options[i].value == ckey && cvalue == 5) {
+              getTimeSlot.remove(i);
+            }
+          }
+        }
+
+        tabel1 = "";
+        array.forEach((values) => {
+          tabel1 += `<tr><td>${values}<td></tr>`;
+        });
+
+        const getTable = document.querySelector("table");
+        getTable.innerHTML = tabel1;
+      });
+    </script>
+  </body>
+</html>
